@@ -3,7 +3,9 @@
 //var express = require('express');
 //var app = express();
 
-var app = require('express')();
+var express = require('express');
+var app = express();
+//var app = require('express')();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
@@ -14,11 +16,15 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
+// expone todo el contenido de la carpeta public
+app.use(express.static('public'));
 
 
 //Whenever someone connects this gets executed
 io.on('connection', function(socket) {
   console.log('A user connected');
+
+  
 
   //Whenever someone disconnects this piece of code executed
   socket.on('disconnect', function () {
