@@ -13,6 +13,19 @@ const char* password = "61017214";
 SocketIoClient webSocket;
 
 
+void Apagar(const char *payload, size_t length)
+{
+  digitalWrite(2, HIGH);
+  webSocket.emit("node", "node MCU ejecuta apagar");
+  //Serial.printf("got message: %s\n", payload);
+}
+
+void Prender(const char *payload, size_t length)
+{
+  digitalWrite(2, LOW);
+  webSocket.emit("node", "node MCU ejecuta prender");
+}
+
 void setup(void)
 { 
   Serial.begin(9600);
@@ -31,13 +44,17 @@ void setup(void)
   // Print the IP address
   Serial.println(WiFi.localIP());
 
+  webSocket.on("prender", Prender);
+  webSocket.on("apagar", Apagar);
   webSocket.begin("192.168.1.56", 3000);
+  webSocket.setAuthorization("", "");
+  webSocket.emit("node", "node MCU v3 conectado");
 
+  //El led de la board lolin se maneja con logica complementaria
   pinMode(2, OUTPUT);
+  // se inicia con el led apagado
+  digitalWrite(2, HIGH);
 }
 void loop() {
-  //digitalWrite(2, HIGH);
   webSocket.loop();
-  //digitalWrite(2, LOW);
-  //delay(100);
 }
