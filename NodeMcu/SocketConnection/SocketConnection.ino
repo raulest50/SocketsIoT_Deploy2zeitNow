@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "ESP8266WiFi.h"
 #include <SocketIoClient.h>
 
@@ -16,14 +17,14 @@ SocketIoClient webSocket;
 void Apagar(const char *payload, size_t length)
 {
   digitalWrite(2, HIGH);
-  webSocket.emit("node", "node MCU ejecuta apagar");
+  webSocket.emit("node", "\"node MCU ejecuta apagar\"");
   //Serial.printf("got message: %s\n", payload);
 }
 
 void Prender(const char *payload, size_t length)
 {
   digitalWrite(2, LOW);
-  webSocket.emit("node", "node MCU ejecuta prender");
+  webSocket.emit("node", "\"node MCU ejecuta prender\"");
 }
 
 void setup(void)
@@ -48,7 +49,8 @@ void setup(void)
   webSocket.on("apagar", Apagar);
   webSocket.begin("192.168.1.56", 3000);
   webSocket.setAuthorization("", "");
-  webSocket.emit("node", "node MCU v3 conectado");
+  // poner "\" al comienzo del string y \"" al final es super importantisimo para los emit, sino se ponen el mensaje no llega al servidor de socket.io
+  webSocket.emit("node", "\"NodeMCU #1 se ha conectado\"");
 
   //El led de la board lolin se maneja con logica complementaria
   pinMode(2, OUTPUT);
