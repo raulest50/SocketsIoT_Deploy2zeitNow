@@ -25,16 +25,14 @@
         </div>
       </div>
     </div>
-    
 
     <div id="app" class="container">
       <div class="row">
-          <nodo-lolin nodo="nodo1" lugar="Habitacion Esteban" class="col-lg-3 col-xl-3 col-md-12 col-sm-12"></nodo-lolin>
-          <nodo-lolin nodo="nodo2" lugar="Estudio" class="col-lg-3 col-xl-3 col-md-12 col-sm-12"></nodo-lolin>
-          <nodo-lolin nodo="nodo3" lugar="Afuera" class="col-lg-3 col-xl-3 col-md-12 col-sm-12"></nodo-lolin>
+          <nodo-lolin v-bind:estado="infonodos.nodo1" lugar="Habitacion Esteban" class="col-lg-3 col-xl-3 col-md-12 col-sm-12"></nodo-lolin>
+          <nodo-lolin v-bind:estado="infonodos.nodo2" lugar="Estudio" class="col-lg-3 col-xl-3 col-md-12 col-sm-12"></nodo-lolin>
+          <nodo-lolin v-bind:estado="infonodos.nodo3" lugar="Afuera" class="col-lg-3 col-xl-3 col-md-12 col-sm-12"></nodo-lolin>
       </div>
     </div>
-    <script>var socket = io();</script>
     <script src="js/nodo_lolin.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

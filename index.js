@@ -10,7 +10,8 @@ var io = require('socket.io')(http);
 var usuarios_lolin = {"nodo1":"", "nodo2":"", "nodo3":""};
 
 // para guardar el estado de las salidas logicas de cada nodo
-var estados_lolin = {"nodo1":NaN, "nodo2":NaN, "nodo3":NaN};
+var estados_lolin = {nodo1:{name:"nodo1",out:3},nodo2:{name:"nodo2",out:3},nodo3:{name:"nodo3",out:3}} //{"nodo1":NaN, "nodo2":NaN, "nodo3":NaN};
+
 
 
 
@@ -41,7 +42,7 @@ io.on('connection', function(socket) {
 
   socket.on('notificar_estado_lolin', function(msg){
     let info = msg.split(":"); // esplit para separar el nombre del nodo y su estado logico
-    estados_lolin[info[0]] = Number(info[1]); // se actualiza el repectivo nodo en estados_lolin
+    estados_lolin[info[0]].out = Number(info[1]); // se actualiza el repectivo nodo en estados_lolin
     let str_json_estados = JSON.stringify(estados_lolin); // convierte la informacion de los estados a string
     io.sockets.emit('estados_nodos_recibir', str_json_estados);//emision broadcast de los estados actualizados
   });
@@ -69,12 +70,10 @@ http.listen(3000, function(){
   console.log('listening at port 3000 :)');
 });
 
-// solo el cliente de navegador implementa el evento 'notificar_nodo_up'.
+// se asocia el nombre recibido con el id asignado por socket.io
 function identificar(id, nombre){
   usuarios_lolin[nombre] = id;
-  io.sockets.emit('notificar_nodo_up', nombre);
 }
-
 
 // link para instalar board support para nodeMCU v3
 //http://arduino.esp8266.com/stable/package_esp8266com_index.json
@@ -83,11 +82,7 @@ function identificar(id, nombre){
 // https://github.com/timum-viw/socket.io-client
 // https://github.com/borbier/nodemcu-with-socket.io
 
-
-
-
 // socket io repo   https://github.com/socketio/socket.io
-
 
 /*
 socket.emit('message', "this is a test"); //sending to sender-client only
