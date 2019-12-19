@@ -6,6 +6,12 @@ var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
+// para guardar los id que asigna socket.io a cada nodo lolin
+var usuarios_lolin = {"nodo1":"", "nodo2":"", "nodo3":""};
+
+// para guardar el estado de las salidas logicas de cada nodo
+var estados_lolin = {"nodo1":NaN, "nodo2":NaN, "nodo3":NaN};
+
 
 
 // se sirve el index
@@ -19,26 +25,41 @@ app.use(express.static('public'));
 
 //Whenever someone connects this gets executed
 io.on('connection', function(socket) {
-  console.log('A user connected' + socket.handshake);
 
-  socket.on('browserApagar', function(msg){
-    io.sockets.emit('apagar', 'x');
-    console.log('navegador envia apagar');
+  socket.emit('identificarse', "x");
+  console.log('A user connected ' + socket.id);
+
+  // enviar evento a un lolin para que se identifique
+  socket.on('identificacion', function(msg){
+    identificar(socket.id, msg);
   });
 
-  socket.on('browserPrender', function(msg){
-    io.sockets.emit('prender', 'x');
-    console.log('navegador evia prender');
+  // verificar cual es la salida logica actual de cada nodo
+  socket.on('browser_estados_nodos_pedir', function(msg){
+    io.sockets.emit('pedir_estado_broadcast', 'x');
   });
 
-  socket.on('node', function(msg){
-    console.log("evento node");
-    console.log(msg);
+  socket.on('notificar_estado_lolin', function(msg){
+    let info = msg.split(":"); // esplit para separar el nombre del nodo y su estado logico
+    estados_lolin[info[0]] = Number(info[1]); // se actualiza el repectivo nodo en estados_lolin
+    let str_json_estados = JSON.stringify(estados_lolin); // convierte la informacion de los estados a string
+    io.sockets.emit('estados_nodos_recibir', str_json_estados);//emision broadcast de los estados actualizados
   });
 
-  //Whenever someone disconnects this piece of code executed
+  // enviar el evento a un lolin para apagar pin
+  socket.on('browserApagar', function(nombre){
+    socket.broadcast.to(usuarios_lolin[nombre]).emit('apagar', 'x');
+  });
+
+  // enviar el evento a un lolin para prender pin
+  socket.on('browserPrender', function(nombre){    
+    socket.broadcast.to(usuarios_lolin[nombre]).emit('prender', 'x');
+  });
+
+  // notificar que un lolin se desconecto
   socket.on('disconnect', function () {
-     console.log('A user disconnected');
+    //remover(socket.id);
+    //console.log('El id :' + id + "se desconecto");
   });
 });
 
@@ -47,6 +68,13 @@ io.on('connection', function(socket) {
 http.listen(3000, function(){
   console.log('listening at port 3000 :)');
 });
+
+// solo el cliente de navegador implementa el evento 'notificar_nodo_up'.
+function identificar(id, nombre){
+  usuarios_lolin[nombre] = id;
+  io.sockets.emit('notificar_nodo_up', nombre);
+}
+
 
 // link para instalar board support para nodeMCU v3
 //http://arduino.esp8266.com/stable/package_esp8266com_index.json

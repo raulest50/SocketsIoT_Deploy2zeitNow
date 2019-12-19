@@ -13,18 +13,35 @@ const char* ssid = "TP-LINK_2CBAFE";
 const char* password = "61017214";
 SocketIoClient webSocket;
 
+//******************************
+//
+// poner "\" al comienzo del string y \"" al final es super importantisimo para los emit, sino se ponen el mensaje no llega al servidor de socket.io
+//
+//******************************
+
+void Identificarse(const char *payload, size_t length){
+  webSocket.emit("identificacion", "\"nodo3\"");
+}
 
 void Apagar(const char *payload, size_t length)
 {
   digitalWrite(2, HIGH);
-  webSocket.emit("node", "\"node MCU ejecuta apagar\"");
-  //Serial.printf("got message: %s\n", payload);
+  webSocket.emit("notificar_estado_lolin", "\"nodo3:0\"");
 }
 
 void Prender(const char *payload, size_t length)
 {
   digitalWrite(2, LOW);
-  webSocket.emit("node", "\"node MCU ejecuta prender\"");
+  webSocket.emit("notificar_estado_lolin", "\"nodo3:1\"");
+}
+
+void Informar_Estado(const char *payload, size_t length)
+{
+  if(digitalRead(2)==1){
+    webSocket.emit("notificar_estado_lolin", "\"nodo3:0\""); 
+  } else{
+    webSocket.emit("notificar_estado_lolin", "\"nodo3:1\"");
+  }
 }
 
 void setup(void)
@@ -47,10 +64,10 @@ void setup(void)
 
   webSocket.on("prender", Prender);
   webSocket.on("apagar", Apagar);
+  webSocket.on("identificarse", Identificarse);
+  webSocket.on("pedir_estado_broadcast", Informar_Estado);
   webSocket.begin("192.168.1.56", 3000);
-  webSocket.setAuthorization("", "");
-  // poner "\" al comienzo del string y \"" al final es super importantisimo para los emit, sino se ponen el mensaje no llega al servidor de socket.io
-  webSocket.emit("node", "\"NodeMCU #1 se ha conectado\"");
+  
 
   //El led de la board lolin se maneja con logica complementaria
   pinMode(2, OUTPUT);
