@@ -79,4 +79,5 @@ void setup(void)
 }
 void loop() {
   webSocket.loop();
+  delay(1000);
 }

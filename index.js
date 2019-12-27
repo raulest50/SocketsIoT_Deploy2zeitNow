@@ -30,7 +30,9 @@ app.use(express.static('public'));
 io.on('connection', function(socket) {
 
   socket.emit('identificarse', "x");
-  console.log('A user connected ' + socket.id);
+  console.log('A user connected ' + socket.id + "      puerto:" + port);
+  console.log(usuarios_lolin);
+  console.log(estados_lolin);
 
   // enviar evento a un lolin para que se identifique
   socket.on('identificacion', function(msg){
