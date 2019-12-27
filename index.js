@@ -6,6 +6,8 @@ var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
+var port = process.env.PORT || 3000;
+
 // para guardar los id que asigna socket.io a cada nodo lolin
 var usuarios_lolin = {"nodo1":"", "nodo2":"", "nodo3":""};
 
@@ -32,6 +34,7 @@ io.on('connection', function(socket) {
 
   // enviar evento a un lolin para que se identifique
   socket.on('identificacion', function(msg){
+    console.log(msg);
     identificar(socket.id, msg);
   });
 
@@ -66,8 +69,8 @@ io.on('connection', function(socket) {
 
 
 // se activa express server
-http.listen(3000, function(){
-  console.log('listening at port 3000 :)');
+http.listen(port, function(){
+  console.log('listening at port' + port + ' :)');
 });
 
 // se asocia el nombre recibido con el id asignado por socket.io
