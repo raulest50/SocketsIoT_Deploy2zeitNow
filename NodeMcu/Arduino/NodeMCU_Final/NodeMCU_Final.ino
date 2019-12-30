@@ -69,7 +69,7 @@ void setup(void)
   webSocket.on("apagar", Apagar);
   webSocket.on("identificarse", Identificarse);
   webSocket.on("pedir_estado_broadcast", Informar_Estado);
-  webSocket.begin("http://majoma-smart.glitch.me", 80);
+  webSocket.begin("192.168.1.56", 3000);
   
 
   //El led de la board lolin se maneja con logica complementaria
@@ -79,5 +79,4 @@ void setup(void)
 }
 void loop() {
   webSocket.loop();
-  delay(1000);
 }

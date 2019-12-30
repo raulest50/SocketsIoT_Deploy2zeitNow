@@ -1,12 +1,12 @@
 
-// para el web server express 
+// para el web server local con express 
 var express = require('express');
 var app = express();
 
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
-var port = process.env.PORT || 3000;
+var port = 3000;
 
 // para guardar los id que asigna socket.io a cada nodo lolin
 var usuarios_lolin = {"nodo1":"", "nodo2":"", "nodo3":""};
@@ -15,13 +15,10 @@ var usuarios_lolin = {"nodo1":"", "nodo2":"", "nodo3":""};
 var estados_lolin = {nodo1:{name:"nodo1",out:3},nodo2:{name:"nodo2",out:3},nodo3:{name:"nodo3",out:3}} //{"nodo1":NaN, "nodo2":NaN, "nodo3":NaN};
 
 
-
-
 // se sirve el index
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
-
 // expone todo el contenido de la carpeta public
 app.use(express.static('public'));
 
@@ -30,13 +27,13 @@ app.use(express.static('public'));
 io.on('connection', function(socket) {
 
   socket.emit('identificarse', "x");
-  console.log('A user connected ' + socket.id + "      puerto:" + port);
-  console.log(usuarios_lolin);
-  console.log(estados_lolin);
+  //console.log('A user connected ' + socket.id + "      puerto:" + port);
+  //console.log(usuarios_lolin);
+  //console.log(estados_lolin);
 
   // enviar evento a un lolin para que se identifique
   socket.on('identificacion', function(msg){
-    console.log(msg);
+    //console.log(msg);
     identificar(socket.id, msg);
   });
 
@@ -69,12 +66,6 @@ io.on('connection', function(socket) {
   });
 });
 
-
-// se activa express server
-http.listen(port, function(){
-  console.log('listening at port' + port + ' :)');
-});
-
 // se asocia el nombre recibido con el id asignado por socket.io
 function identificar(id, nombre){
   usuarios_lolin[nombre] = id;
@@ -105,3 +96,12 @@ io.sockets.socket(); //for emiting to specific clients
 io.sockets.emit(); //send to all connected clients (same as socket.emit)
 io.sockets.on() ; //initial connection from a client.
 */
+
+
+
+// se activa express server
+http.listen(port, function(){
+  console.log('listening at port' + port + ' :)');
+});
+
+
