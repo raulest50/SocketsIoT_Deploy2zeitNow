@@ -1,0 +1,26 @@
+No se pudo lograr una comunicacion cuando el servidor de node estaba en la nube, por lo que se uso 
+page kite para exponer el servidor local a internet y todo funciono perfectamente hasta el dia de 
+regreso de capurgana.
+
+el uso de soket io tiene limitaciones importantes como que la libreria que se uso del lado de arduino
+es mantenida por una sola persona que lo hizo como hobysta y no creo que se vaya a desarrollar
+activamente despues de eso. ademas el uso de websockets se ha vuelto mas popular ya que los navegadores
+ya ofrecen un soporte nativo porlo que creo que la popularidad de socket io se quedara en el punto
+actual o decrecera.
+
+por otro lado el mismo uso de websocket o de socket io involucra la implementacion de algunas funciones
+de logica en ambos lados como crear un eveto para que se identifique cada nodo y tambien la forma 
+en que los nodos se comunican entre si. todo eso agrega complejidad a la implementacion.
+
+para el tamaño desarrollado en este repositorio la solucion ya probo ser robusta y estar a la altura
+de un prouducto para consumo.
+
+sin embargo para lograr sistemas de mayor complejidad con suficiencia, parece que es mejor usar MQTT
+como protocolo de comunicacion ya que este esta mejor adaptado a IoT en muchos aspectos.
+
+de la misma forma parece una buena idea usar micropython en lugar de arduino ide, ya que este viene con
+el mmodulo para MQTT incluido y parece que el desarrollo de micropython es bastante activo tanto
+en el lado software como hardware. pero esta clase de implementacion se deja para otro repo.
+
+por lo pronto dejo este proyecto como concluido de manera exitosa, logrando completamente todas las 
+espectativas.

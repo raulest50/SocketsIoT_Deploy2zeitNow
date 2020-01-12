@@ -29,12 +29,14 @@ void Identificarse(const char *payload, size_t length){
 void Apagar(const char *payload, size_t length)
 {
   digitalWrite(2, HIGH);
+  digitalWrite(16, LOW);
   webSocket.emit("notificar_estado_lolin", "\"nodo1:0\"");
 }
 
 void Prender(const char *payload, size_t length)
 {
   digitalWrite(2, LOW);
+  digitalWrite(16, HIGH);
   webSocket.emit("notificar_estado_lolin", "\"nodo1:1\"");
 }
 
@@ -76,6 +78,9 @@ void setup(void)
   pinMode(2, OUTPUT);
   // se inicia con el led apagado
   digitalWrite(2, HIGH);
+
+  pinMode(16, OUTPUT);
+  digitalWrite(16, LOW);
 }
 void loop() {
   webSocket.loop();
